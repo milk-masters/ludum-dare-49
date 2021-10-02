@@ -4,30 +4,27 @@ using UnityEngine;
 
 public class CustomerBehaviour : MonoBehaviour
 {
-
-    public enum customerStates { preStart, start, shaving, checking, scoring, finished, error}
-    customerStates state;
-    bool stateHasChanged = false;
+    StateMachineState start;
+    StateMachineState shaving;
+    StateMachineState checking;
+    StateMachineState scoring;
+    StateMachineState finished;
+    StateMachine stateMachine;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        state = customerStates.preStart;
+        stateMachine = new StateMachine(InitStates());
     }
 
-    public void ChangeState(customerStates newState)
+    StateMachineState[] InitStates()
     {
-        Debug.Log("Changing state to " + newState);
+        start = new StateMachineState("Customer.Start");
+        shaving = new StateMachineState("Customer.Shaving");
+        checking = new StateMachineState("Customer.Checking");
+        scoring = new StateMachineState("Customer.Scoring");
+        finished = new StateMachineState("Customer.Finished");
 
-        if (state != newState)
-            stateHasChanged = true;
-
-        state = newState;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //if (stateHasChanged)
-
+        StateMachineState[] stateArray = {start, shaving, checking, scoring, finished};
+        return stateArray;
     }
 }

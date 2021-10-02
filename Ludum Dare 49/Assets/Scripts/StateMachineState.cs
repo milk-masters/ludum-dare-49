@@ -31,11 +31,15 @@ public class StateMachineState
     {
         if (onBegin != null)
             onBegin.Invoke();
+        else
+            Debug.Log(Name + " has no begin action, skipping");
     }
 
     public void OnStateComplete()
     {
         if (onComplete != null)
             onComplete.Invoke();
+        else
+            Debug.Log(Name + " has no complete action, skipping");
     }
 }

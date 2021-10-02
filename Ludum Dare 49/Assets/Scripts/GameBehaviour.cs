@@ -10,6 +10,10 @@ public class GameBehaviour : MonoBehaviour
     StateMachineState working;
     StateMachineState gameover;
     StateMachine stateMachine;
+
+    UIBehaviour uIBehaviour;
+    WorkingBehaviour workingBehaviour;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -18,14 +22,25 @@ public class GameBehaviour : MonoBehaviour
 
     StateMachineState[] InitStates()
     {
-        loading = new StateMachineState("Game.Loading");
-        intro = new StateMachineState("Game.Intro");
+        loading = new StateMachineState("Game.Loading", LoadingBegin, LoadingComplete);
+        intro = new StateMachineState("Game.Intro", MenuBegin, MenuComplete);
         menu = new StateMachineState("Game.Menu", MenuBegin, MenuComplete);
         working = new StateMachineState("Game.Working");
         gameover = new StateMachineState("Game.Over");
 
         StateMachineState[] stateArray = {loading, menu, intro, working, gameover};
         return stateArray;
+    }
+
+    void LoadingBegin()
+    {
+        // Connect to UI
+    }
+
+    void LoadingComplete()
+    {
+        // Create menu
+        // Connect to items
     }
 
     void MenuBegin()

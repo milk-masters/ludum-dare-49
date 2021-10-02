@@ -10,6 +10,9 @@ public class WorkingBehaviour : MonoBehaviour
     StateMachineState dispose;
     StateMachineState finished;
     StateMachine stateMachine;
+
+    CustomerBehaviour customerBehaviour;
+
     // Start is called before the first frame update
     void Awake()
     {

@@ -2,10 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIPage : MonoBehaviour
+public class UIItem : MonoBehaviour
 {
-    public string Name;
-    // Start is called before the first frame update
+    public bool IsDebug;
     void Start()
     {
         

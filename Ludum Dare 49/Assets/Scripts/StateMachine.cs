@@ -32,7 +32,7 @@ public class StateMachine
 
         currentStateIndex = newStateIndex;
 
-        Debug.Log(string.Format("State has changed from {0} to {1}", oldStateIndex, newStateIndex));
+        Debug.Log(string.Format("State has changed from {0} to {1}", States[oldStateIndex].Name, States[newStateIndex].Name));
 
         States[oldStateIndex].OnStateComplete();
         States[newStateIndex].OnStateBegin();
