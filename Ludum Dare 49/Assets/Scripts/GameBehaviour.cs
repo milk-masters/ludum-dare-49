@@ -4,37 +4,68 @@ using UnityEngine;
 
 public class GameBehaviour : MonoBehaviour
 {
-
     StateMachineState loading;
     StateMachineState menu;
     StateMachineState intro;
-    StateMachineState customer;
+    StateMachineState working;
     StateMachineState gameover;
-    StateMachineState complete;
     StateMachine stateMachine;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         stateMachine = new StateMachine(InitStates());
     }
 
     StateMachineState[] InitStates()
     {
-        loading = new StateMachineState();
-        menu = new StateMachineState();
-        intro = new StateMachineState();
-        customer = new StateMachineState();
-        gameover = new StateMachineState();
-        complete = new StateMachineState();
-        
-        StateMachineState[] stateArray = {loading, menu, intro, customer, gameover, complete};
+        loading = new StateMachineState("Game.Loading");
+        intro = new StateMachineState("Game.Intro");
+        menu = new StateMachineState("Game.Menu", MenuBegin, MenuComplete);
+        working = new StateMachineState("Game.Working");
+        gameover = new StateMachineState("Game.Over");
+
+        StateMachineState[] stateArray = {loading, menu, intro, working, gameover};
         return stateArray;
+    }
+
+    void MenuBegin()
+    {
+        // Show menu UI
+
+        // Add menu events
+
+    }
+
+    void MenuComplete()
+    {
+        // Hide menu UI
+    }
+
+    void WorkingBegin()
+    {
+        // Create new work behaviour
+    }
+
+    void WorkingComplete()
+    {
+        // get rid of working stuff
+    }
+
+    void GameOverBegin()
+    {
+        // show score
+        // show gameover stuff
+        // show return to menu button
+    }
+
+    void GameOverCustomer()
+    {
+        // hide stuff
     }
 
     // Update is called once per frame
     void Update()
     {
-        //if (stateHasChanged)
-
+        
     }
 }

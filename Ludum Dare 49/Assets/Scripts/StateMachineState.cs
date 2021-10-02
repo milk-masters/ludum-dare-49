@@ -6,13 +6,15 @@ using System;
 public class StateMachineState
 {
     public int Index {get; private set;} = -1;
+    public string Name {get; private set;}
     StateMachine parentStateMachine;
 
     Action onBegin = null;
     Action onComplete = null;
 
-    public StateMachineState(Action onBeginAction = null, Action onCompleteAction = null)
+    public StateMachineState(string name, Action onBeginAction = null, Action onCompleteAction = null)
     {
+        Name = name;
         onBegin = onBeginAction;
         onComplete = onCompleteAction;
     }
