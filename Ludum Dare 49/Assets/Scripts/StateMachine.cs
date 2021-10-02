@@ -8,7 +8,7 @@ public class StateMachine
 
     public bool HasStateChanged {get; private set;}
     public StateMachineState CurrentState {get { return States[currentStateIndex]; }}
-    int currentStateIndex;
+    int currentStateIndex = -1;
 
     public StateMachine(StateMachineState[] states)
     {
@@ -32,9 +32,14 @@ public class StateMachine
 
         currentStateIndex = newStateIndex;
 
-        Debug.Log(string.Format("State has changed from {0} to {1}", States[oldStateIndex].Name, States[newStateIndex].Name));
+        if (oldStateIndex == -1)
+            Debug.Log(string.Format("Initial state is {0}", States[newStateIndex].Name));
+        else
+        {
+            Debug.Log(string.Format("State has changed from {0} to {1}", States[oldStateIndex].Name, States[newStateIndex].Name));
+            States[oldStateIndex].OnStateComplete();
+        }
 
-        States[oldStateIndex].OnStateComplete();
         States[newStateIndex].OnStateBegin();
     }
 }

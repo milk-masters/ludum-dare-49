@@ -5,15 +5,7 @@ using UnityEngine;
 public class UIPage : MonoBehaviour
 {
     public string Name;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public int Index;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public virtual void SetIndex(int index) {}
 }

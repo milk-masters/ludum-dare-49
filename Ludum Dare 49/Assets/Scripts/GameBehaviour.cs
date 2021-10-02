@@ -11,8 +11,8 @@ public class GameBehaviour : MonoBehaviour
     StateMachineState gameover;
     StateMachine stateMachine;
 
-    UIBehaviour uIBehaviour;
-    WorkingBehaviour workingBehaviour;
+    public UIBehaviour UIBehaviour;
+    public WorkingBehaviour WorkingBehaviour;
 
     // Start is called before the first frame update
     void Awake()
@@ -20,12 +20,17 @@ public class GameBehaviour : MonoBehaviour
         stateMachine = new StateMachine(InitStates());
     }
 
+    void Start()
+    {
+        stateMachine.ChangeState(loading);
+    }
+
     StateMachineState[] InitStates()
     {
         loading = new StateMachineState("Game.Loading", LoadingBegin, LoadingComplete);
-        intro = new StateMachineState("Game.Intro", MenuBegin, MenuComplete);
+        intro = new StateMachineState("Game.Intro");
         menu = new StateMachineState("Game.Menu", MenuBegin, MenuComplete);
-        working = new StateMachineState("Game.Working");
+        working = new StateMachineState("Game.Working", WorkingBegin);
         gameover = new StateMachineState("Game.Over");
 
         StateMachineState[] stateArray = {loading, menu, intro, working, gameover};
@@ -35,6 +40,7 @@ public class GameBehaviour : MonoBehaviour
     void LoadingBegin()
     {
         // Connect to UI
+        stateMachine.ChangeState(menu);
     }
 
     void LoadingComplete()
@@ -46,19 +52,21 @@ public class GameBehaviour : MonoBehaviour
     void MenuBegin()
     {
         // Show menu UI
+        MenuPage menuPage = UIBehaviour.ShowPage(MenuPage.StaticIndex) as MenuPage;
 
-        // Add menu events
-
+        menuPage.StartButton.onClick.AddListener(() => stateMachine.ChangeState(working));
     }
 
     void MenuComplete()
     {
         // Hide menu UI
+        UIBehaviour.HidePage(MenuPage.StaticIndex);
     }
 
     void WorkingBegin()
     {
         // Create new work behaviour
+        WorkingBehaviour.Begin();
     }
 
     void WorkingComplete()

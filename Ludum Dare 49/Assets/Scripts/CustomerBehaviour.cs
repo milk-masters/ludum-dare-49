@@ -10,21 +10,129 @@ public class CustomerBehaviour : MonoBehaviour
     StateMachineState scoring;
     StateMachineState finished;
     StateMachine stateMachine;
-    // Start is called before the first frame update
+
+    public string Name;
+    public Transform[] TargetBeards;
+    int beardIndex = -1;
+    public Transform Face;
+    public Transform StartingBeard;
+    public float Difficulty;
+    public BeardBehaviour BeardBehaviour;
+    Texture2D activeBeardTexture;
+    Texture2D targetBeardTexture;
+
     void Awake()
     {
         stateMachine = new StateMachine(InitStates());
+        activeBeardTexture = new Texture2D(512, 512);
+        targetBeardTexture = new Texture2D(512, 512);
+    }
+
+    public void Begin()
+    {
+        stateMachine.ChangeState(start);
+    }
+
+    public void Shave()
+    {
+        stateMachine.ChangeState(shaving);
+    }
+
+    public void Check()
+    {
+        stateMachine.ChangeState(checking);
     }
 
     StateMachineState[] InitStates()
     {
-        start = new StateMachineState("Customer.Start");
+        start = new StateMachineState("Customer.Start", StartBegin);
         shaving = new StateMachineState("Customer.Shaving");
-        checking = new StateMachineState("Customer.Checking");
+        checking = new StateMachineState("Customer.Checking", StartChecking);
         scoring = new StateMachineState("Customer.Scoring");
         finished = new StateMachineState("Customer.Finished");
 
         StateMachineState[] stateArray = {start, shaving, checking, scoring, finished};
         return stateArray;
+    }
+
+    void StartBegin()
+    {
+        Debug.Log("Activating " + Name);
+
+        if (TargetBeards.Length == 0)
+        {
+            Debug.Log("No available beards");
+            return;
+        }
+        
+        // select a random texture
+        beardIndex = Random.Range(0, TargetBeards.Length);
+
+        // apply a beard to the render texture
+        BeardBehaviour.SetTargetBeard(StartingBeard);
+        BeardBehaviour.SetDefaultBeard(TargetBeards[beardIndex]);
+
+        // enable face
+        Face.gameObject.SetActive(true);
+    }
+    
+
+    void StartChecking()
+    {
+        var oldTex = RenderTexture.active;
+
+        var tex = BeardBehaviour.TargetCameraTransform.gameObject.GetComponent<Camera>().targetTexture;
+        RenderTexture.active = tex;
+        targetBeardTexture.ReadPixels(new Rect(0,0,tex.width, tex.height),0,0);
+        targetBeardTexture.Apply();
+        
+        tex = BeardBehaviour.ActiveCameraTransform.gameObject.GetComponent<Camera>().targetTexture;
+        RenderTexture.active = tex;
+        activeBeardTexture.ReadPixels(new Rect(0,0,tex.width, tex.height),0,0);
+        activeBeardTexture.Apply();
+
+        RenderTexture.active = oldTex;
+
+        // do check math
+        float score = CalculateScore(targetBeardTexture, activeBeardTexture);
+        Debug.Log(score);
+        // score
+        stateMachine.ChangeState(scoring);
+    }
+
+    public float CalculateScore(Texture2D target, Texture2D actual)
+    {
+        var targetData = target.GetPixels32();
+        Debug.Log(targetData.Length);
+        var actualData = actual.GetPixels32();
+        Debug.Log(actualData.Length);
+
+        int pixelCount = actualData.Length;
+        int matchCount = 0;
+        int potentialCount = 0;
+
+        // Debug.Log(targetData[0].b);
+        // Debug.Log(actualData[0].b);
+
+        for (int i = 0; i < targetData.Length; i++)
+        {
+            if (targetData[i].r > 0)
+            {
+                potentialCount++;
+                if(actualData[i].r > 0)
+                    matchCount++;
+            }
+            else
+                if(actualData[i].r > 0)
+                    matchCount--;
+        }
+
+        Debug.Log("Potential: " + potentialCount);
+        Debug.Log("Actual: " + matchCount);
+
+        if (potentialCount < 1 || matchCount < 1)
+            return 0f;
+
+        return (float)matchCount/potentialCount * 100f;
     }
 }

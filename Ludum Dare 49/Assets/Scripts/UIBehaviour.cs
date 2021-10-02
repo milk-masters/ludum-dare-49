@@ -4,24 +4,36 @@ using UnityEngine;
 
 public class UIBehaviour : MonoBehaviour
 {
-    UIPage[] UIPages;
+    public UIPage[] UIPages;
     // Start is called before the first frame update
     void Start()
     {
+        LogAllPages();
+    }
+    
+    public UIPage ShowPage(int pageIndex)
+    {
+        for (int i = 0; i < UIPages.Length; i++)
+        {
+            UIPages[i].gameObject.SetActive(false);
+        }
         
+        UIPages[pageIndex].gameObject.SetActive(true);
+
+        return UIPages[pageIndex];
     }
 
-    // Update is called once per frame
-    void Update()
+    public void HidePage(int pageIndex)
     {
-        
+        UIPages[pageIndex].gameObject.SetActive(false);
     }
 
     public void LogAllPages()
     {
-        foreach (var page in UIPages)
+        for (int i = 0; i < UIPages.Length; i++)
         {
-            Debug.Log(page.Name);
+            UIPages[i].SetIndex(i);
+            Debug.Log(UIPages[i].Name);
         }
     }
 }

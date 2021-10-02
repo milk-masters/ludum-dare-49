@@ -49,6 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Menu
+  Index: 0
 --- !u!1 &3470045377383269664
 GameObject:
   m_ObjectHideFlags: 0
@@ -98,6 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: GameOver
+  Index: 0
 --- !u!1 &3470045377986341979
 GameObject:
   m_ObjectHideFlags: 0
@@ -147,6 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Ready
+  Index: 0
 --- !u!1 &3470045378021025769
 GameObject:
   m_ObjectHideFlags: 0
@@ -159,7 +162,7 @@ GameObject:
   - component: {fileID: 3470045378021025558}
   - component: {fileID: 3470045378021025559}
   - component: {fileID: 3470045378021025768}
-  - component: {fileID: 3470045378021025556}
+  - component: {fileID: 298433365406976102}
   m_Layer: 5
   m_Name: UIBase
   m_TagString: Untagged
@@ -252,7 +255,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &3470045378021025556
+--- !u!114 &298433365406976102
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -313,6 +316,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Customer
+  Index: 0
 --- !u!1 &3470045378536986409
 GameObject:
   m_ObjectHideFlags: 0
@@ -362,3 +366,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Score
+  Index: 0
