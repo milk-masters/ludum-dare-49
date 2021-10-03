@@ -23,6 +23,11 @@ public class UIBehaviour : MonoBehaviour
         return UIPages[pageIndex];
     }
 
+    public UIPage GetPage(int pageIndex)
+    {
+        return UIPages[pageIndex];
+    }
+
     public void HidePage(int pageIndex)
     {
         UIPages[pageIndex].gameObject.SetActive(false);

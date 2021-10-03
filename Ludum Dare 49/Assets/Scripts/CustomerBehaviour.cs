@@ -16,10 +16,13 @@ public class CustomerBehaviour : MonoBehaviour
     int beardIndex = -1;
     public Transform Face;
     public Transform StartingBeard;
+    public Transform Bubble;
     public float Difficulty;
+    public float Score {get; private set;}
     public BeardBehaviour BeardBehaviour;
     Texture2D activeBeardTexture;
     Texture2D targetBeardTexture;
+    public WorkingBehaviour WorkingBehaviour;
 
     void Awake()
     {
@@ -46,10 +49,10 @@ public class CustomerBehaviour : MonoBehaviour
     StateMachineState[] InitStates()
     {
         start = new StateMachineState("Customer.Start", StartBegin);
-        shaving = new StateMachineState("Customer.Shaving");
+        shaving = new StateMachineState("Customer.Shaving", null, ShavingComplete);
         checking = new StateMachineState("Customer.Checking", StartChecking);
-        scoring = new StateMachineState("Customer.Scoring");
-        finished = new StateMachineState("Customer.Finished");
+        scoring = new StateMachineState("Customer.Scoring", StartScoring, CompleteScoring);
+        finished = new StateMachineState("Customer.Finished", StartFinished);
 
         StateMachineState[] stateArray = {start, shaving, checking, scoring, finished};
         return stateArray;
@@ -74,6 +77,12 @@ public class CustomerBehaviour : MonoBehaviour
 
         // enable face
         Face.gameObject.SetActive(true);
+        Bubble.gameObject.SetActive(true);
+    }
+
+    void ShavingComplete()
+    {
+        
     }
     
 
@@ -94,10 +103,27 @@ public class CustomerBehaviour : MonoBehaviour
         RenderTexture.active = oldTex;
 
         // do check math
-        float score = CalculateScore(targetBeardTexture, activeBeardTexture);
-        Debug.Log(score);
+        Score = CalculateScore(targetBeardTexture, activeBeardTexture);
+        Debug.Log(Score);
         // score
         stateMachine.ChangeState(scoring);
+    }
+
+    void StartScoring()
+    {
+        ScoringPage scoringPage = WorkingBehaviour.UIBehaviour.ShowPage(ScoringPage.StaticIndex) as ScoringPage;
+        scoringPage.Show(Difficulty, Score, this);
+    }
+
+    void CompleteScoring()
+    {
+        (WorkingBehaviour.UIBehaviour.GetPage(ScoringPage.StaticIndex) as ScoringPage).Hide();
+        WorkingBehaviour.UIBehaviour.HidePage(ScoringPage.StaticIndex);
+    }
+
+    public void Finish()
+    {
+        stateMachine.ChangeState(finished);
     }
 
     public float CalculateScore(Texture2D target, Texture2D actual)
@@ -133,6 +159,17 @@ public class CustomerBehaviour : MonoBehaviour
         if (potentialCount < 1 || matchCount < 1)
             return 0f;
 
-        return (float)matchCount/potentialCount * 100f;
+        float score = (float)matchCount/potentialCount;
+
+        score = Mathf.Min(score + 0.1f, 1f);
+
+        return score;
+    }
+
+    void StartFinished()
+    {
+        WorkingBehaviour.NextCustomer();
+        Face.gameObject.SetActive(false);
+        Bubble.gameObject.SetActive(false);
     }
 }
