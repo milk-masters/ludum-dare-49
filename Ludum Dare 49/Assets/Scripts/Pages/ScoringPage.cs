@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ScoringPage : UIPage
 {
-    public TMPro.TMP_Text ContinueButtonText;
     public UnityEngine.UI.Button ContinueButton;
     public TMPro.TMP_Text AccuracyValueText;
     public TMPro.TMP_Text TargetValueText;

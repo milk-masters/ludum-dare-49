@@ -12,6 +12,7 @@ public class CustomerBehaviour : MonoBehaviour
     StateMachine stateMachine;
 
     public string Name;
+    public int Id;
     public Transform[] TargetBeards;
     int beardIndex = -1;
     public Transform Face;
@@ -46,6 +47,11 @@ public class CustomerBehaviour : MonoBehaviour
         stateMachine.ChangeState(checking);
     }
 
+    public bool IsShaving()
+    {
+        return stateMachine.CurrentState == shaving;
+    }
+
     StateMachineState[] InitStates()
     {
         start = new StateMachineState("Customer.Start", StartBegin);
@@ -78,6 +84,8 @@ public class CustomerBehaviour : MonoBehaviour
         // enable face
         Face.gameObject.SetActive(true);
         Bubble.gameObject.SetActive(true);
+
+        AudioManager._.PlayVO(Id, 0);
     }
 
     void ShavingComplete()
@@ -113,6 +121,8 @@ public class CustomerBehaviour : MonoBehaviour
     {
         ScoringPage scoringPage = WorkingBehaviour.UIBehaviour.ShowPage(ScoringPage.StaticIndex) as ScoringPage;
         scoringPage.Show(Difficulty, Score, this);
+        int vl = Score >= Difficulty-0.05f? 1: 2;
+        AudioManager._.PlayVO(Id, vl);
     }
 
     void CompleteScoring()

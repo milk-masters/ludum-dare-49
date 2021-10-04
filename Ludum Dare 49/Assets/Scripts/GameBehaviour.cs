@@ -13,6 +13,7 @@ public class GameBehaviour : MonoBehaviour
 
     public UIBehaviour UIBehaviour;
     public WorkingBehaviour WorkingBehaviour;
+    public Transform TitleSign;
 
     // Start is called before the first frame update
     void Awake()
@@ -41,6 +42,7 @@ public class GameBehaviour : MonoBehaviour
     {
         // Connect to UI
         stateMachine.ChangeState(menu);
+        TitleSign.gameObject.SetActive(true);
     }
 
     void LoadingComplete()
@@ -61,6 +63,7 @@ public class GameBehaviour : MonoBehaviour
     {
         // Hide menu UI
         UIBehaviour.HidePage(MenuPage.StaticIndex);
+        TitleSign.gameObject.SetActive(false);
     }
 
     void WorkingBegin()

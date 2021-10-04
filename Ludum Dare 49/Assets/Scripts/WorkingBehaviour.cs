@@ -12,6 +12,7 @@ public class WorkingBehaviour : MonoBehaviour
     StateMachine stateMachine;
     public CustomerBehaviour[] Customers;
     public UIBehaviour UIBehaviour;
+    public BeardBehaviour BeardBehaviour;
 
     [SerializeField]
     int currentCustomerIndex = -1;
@@ -19,8 +20,9 @@ public class WorkingBehaviour : MonoBehaviour
 
     public Grabbable GrabbedTool = null;
     public Transform ToolsParent;
-    public Transform BigEraser;
     public Transform Bubble;
+    public RectTransform Credits;
+    bool gameIsOver = false;
 
     // Start is called before the first frame update
     void Awake()
@@ -58,11 +60,17 @@ public class WorkingBehaviour : MonoBehaviour
     void ReadyBegin()
     {
         currentCustomerIndex = 0;
+        BeardBehaviour.Wipe();
     }
 
     void CreateBegin()
     {
-        BigEraser.gameObject.SetActive(false);
+        if (currentCustomerIndex >= Customers.Length)
+        {
+            stateMachine.ChangeState(finished);
+            return;
+        }
+        
         Customers[currentCustomerIndex].Begin();
         
         stateMachine.ChangeState(customer);
@@ -85,7 +93,10 @@ public class WorkingBehaviour : MonoBehaviour
     {
         Customers[currentCustomerIndex].Check();
         if (GrabbedTool != null)
+        {
             GrabbedTool.Drop();
+            GrabbedTool = null;
+        }
     }
 
     void CustomerComplete()
@@ -95,14 +106,16 @@ public class WorkingBehaviour : MonoBehaviour
 
     public void DisposeBegin()
     {
-        BigEraser.gameObject.SetActive(true);
+        BeardBehaviour.Wipe();
         currentCustomerIndex++;
-        SetTimer(1f);
+        SetTimer(0.2f);
     }
 
     public void FinishedBegin()
     {
         ToolsParent.gameObject.SetActive(false);
+        Credits.gameObject.SetActive(true);
+        gameIsOver = true;
     }
 
     void SetTimer(float val)
@@ -121,7 +134,7 @@ public class WorkingBehaviour : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(0) && stateMachine.CurrentState == customer)
+        if (Input.GetMouseButtonDown(0) && stateMachine.CurrentState == customer && Customers[currentCustomerIndex].IsShaving())
         {
             Vector3 vec = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit[] hits = Physics.RaycastAll(vec, Vector3.forward, 50, LayerMask.GetMask("Grabbable"));
@@ -143,6 +156,12 @@ public class WorkingBehaviour : MonoBehaviour
                     CheckCustomer();
                 }
             }
+        }
+
+        if (gameIsOver && Input.GetKey(KeyCode.Escape))
+        {
+            Debug.Log("Qutting");
+            Application.Quit();
         }
     }
 }

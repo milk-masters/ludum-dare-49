@@ -8,6 +8,8 @@ public class BeardBehaviour : MonoBehaviour
     public Transform ActiveCameraTransform;
     GameObject defaultBeard;
     GameObject targetBeard;
+    public RenderTexture WorkingBeardTexture;
+    public RenderTexture TargetBeardTexture;
     void Start()
     {
         
@@ -21,6 +23,12 @@ public class BeardBehaviour : MonoBehaviour
     public void SetTargetBeard(Transform beardTransform)
     {
         targetBeard = beardTransform.gameObject;
+    }
+
+    public void Wipe()
+    {
+        WorkingBeardTexture.Release();
+        TargetBeardTexture.Release();
     }
 
     // Update is called once per frame
@@ -47,5 +55,10 @@ public class BeardBehaviour : MonoBehaviour
             else
                 defaultBeard.SetActive(true);
         }
+
+        // if (Input.GetKey(KeyCode.J))
+        // {
+        //     Wipe();
+        // }
     }
 }

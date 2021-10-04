@@ -55,7 +55,7 @@ public class Grabbable : MonoBehaviour
             {
                 if (Input.GetKey(KeyCode.A))
                 {
-                    activeChildTransform.RotateAround(vec, Vector3.forward, 0.3f);
+                    activeChildTransform.RotateAround(vec, Vector3.forward, 3f);
                 }
                 else if (Input.mouseScrollDelta.y > 0)
                 {
@@ -64,7 +64,7 @@ public class Grabbable : MonoBehaviour
 
                 if (Input.GetKey(KeyCode.D))
                 {
-                    activeChildTransform.RotateAround(vec, Vector3.forward, -0.3f);
+                    activeChildTransform.RotateAround(vec, Vector3.forward, -3f);
                 }
                 else if (Input.mouseScrollDelta.y < 0)
                 {
@@ -73,30 +73,30 @@ public class Grabbable : MonoBehaviour
 
                 if (IsToggleCut)
                 {
-                    vec = CuttingEdge.localPosition;
-                    if (Input.GetMouseButton(0))
-                        vec.z = 0;
-
                     if (Input.GetMouseButtonDown(0))
                     {
-                        vec.z = 0.3f;
+                        CuttingEdge.gameObject.SetActive(true);
                         activeSubFrameTransforms[0].gameObject.SetActive(true);
                         activeSubFrameTransforms[1].gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        if (CuttingEdge.gameObject.activeSelf)
+                        {
+                            CuttingEdge.gameObject.SetActive(false);
+                        }
                     }
 
                     if (Input.GetMouseButtonUp(0))
                     {
-                        vec.z = 0;
+                        CuttingEdge.gameObject.SetActive(false);
                         activeSubFrameTransforms[0].gameObject.SetActive(false);
                         activeSubFrameTransforms[1].gameObject.SetActive(true);
                     }
-                    CuttingEdge.localPosition = vec;
                 }
                 else
                 {
-                    vec = CuttingEdge.localPosition;
-                    vec.z = Input.GetMouseButton(0)? 0.3f: 0;
-                    CuttingEdge.localPosition = vec;
+                    CuttingEdge.gameObject.SetActive(Input.GetMouseButton(0));
                 }
 
                 switch (ToolType)
